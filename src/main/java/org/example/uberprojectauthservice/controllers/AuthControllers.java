@@ -20,10 +20,9 @@ public class AuthControllers {
 
     @GetMapping
     public void hanuman(){
-        System.out.println("JAI SHREE RAM,JAI BAJRANGBALI");
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/signup/passenger")
     public ResponseEntity<PassengerDto> signUp(@RequestBody @Validated PassengerSignupRequestDto passengerSignupRequestDto) {
         PassengerDto response =  authServices.signUpPassenger(passengerSignupRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
