@@ -50,7 +50,7 @@ public class SpringSecurity {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService());
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider();
+        return daoAuthenticationProvider;
     }
 
     @Bean
