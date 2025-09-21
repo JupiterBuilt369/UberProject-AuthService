@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtService implements CommandLineRunner {
+public class JwtServices implements CommandLineRunner {
 
     @Value("${jwt.expiry}")
     private int expiry;
