@@ -1,4 +1,4 @@
-package org.example.uberprojectauthservice.services;
+    package org.example.uberprojectauthservice.services;
 
 import org.example.uberprojectauthservice.helpers.AuthPassengerDetails;
 import org.example.uberprojectauthservice.model.Passenger;

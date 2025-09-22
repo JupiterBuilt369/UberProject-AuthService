@@ -24,11 +24,11 @@ public class JwtServices implements CommandLineRunner {
     @Value("${jwt.secret}")
     private String SECRET;
 
-    private Key getSignKey(){
+    public Key getSignKey(){
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
-    private String generateToken(Map<String, Object> payload, String email) {
+    public String generateToken(Map<String, Object> payload, String email) {
 
         return Jwts.builder()
                 .setClaims(payload)
@@ -38,9 +38,11 @@ public class JwtServices implements CommandLineRunner {
                 .signWith(getSignKey(), SignatureAlgorithm.HS512)
                 .compact();
     };
+    public String generateToken(String email) {
+        return generateToken(new HashMap<>(), email);
+    }
 
-
-    private Claims extractAllPayloads(String token) {
+    public Claims extractAllPayloads(String token) {
         return Jwts.parserBuilder()
                             .setSigningKey(getSignKey())
                             .build()
@@ -53,12 +55,12 @@ public class JwtServices implements CommandLineRunner {
         return claimsResolver.apply(claims);
     }
 
-    private Object extractPayload(String token, String payloadKey){
+    public Object extractPayload(String token, String payloadKey){
         Claims claim = (Claims) extractAllPayloads(token);
         return (Object)claim.get(payloadKey);
     }
 
-    private String extractEmail(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token,Claims::getSubject);
     }
 
@@ -86,4 +88,5 @@ public class JwtServices implements CommandLineRunner {
         System.out.println(extractPayload(jwtToken,"email"));
         System.out.println(extractClaim(jwtToken,Claims::getSubject));
     }
+
 }

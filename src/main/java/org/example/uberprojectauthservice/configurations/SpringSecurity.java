@@ -27,10 +27,14 @@ public class SpringSecurity {
         return new BCryptPasswordEncoder();
     }
 
+
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/signup/*").permitAll()
                         .requestMatchers("/api/v1/auth/signin/*").permitAll()
@@ -38,6 +42,8 @@ public class SpringSecurity {
                 )
                 .build();
     }
+
+
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
@@ -49,7 +55,7 @@ public class SpringSecurity {
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService());
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
         return daoAuthenticationProvider;
     }
 

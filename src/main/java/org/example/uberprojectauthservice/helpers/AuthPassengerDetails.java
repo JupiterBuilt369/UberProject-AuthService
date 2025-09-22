@@ -7,24 +7,29 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class AuthPassengerDetails extends Passenger implements UserDetails{
+public class AuthPassengerDetails extends Passenger implements UserDetails {
 
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
 
-    public AuthPassengerDetails(Passenger passenger ){
+    public AuthPassengerDetails(Passenger passenger) {
         this.username = passenger.getEmail();
-        this.password = passenger.getPassword();
+        this.password = passenger.getPassword(); // encoded password from DB
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(); // no roles yet
     }
 
     @Override
     public String getUsername() {
         return this.username;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
     }
 
     @Override
