@@ -65,6 +65,7 @@ public class JwtServices implements CommandLineRunner {
     }
 
 
+
     public boolean isTokenValid(String token,  String email) {
         final String userEmailFetchedFromToken = extractEmail(token);
         return (userEmailFetchedFromToken.equals(email) && !isTokenExpired(token));

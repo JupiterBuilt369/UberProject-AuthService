@@ -1,6 +1,8 @@
 package org.example.uberprojectauthservice.configurations;
 
+import org.example.uberprojectauthservice.filters.JwtAuthFilters;
 import org.example.uberprojectauthservice.services.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,14 +15,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import java.util.List;
 
 @Configuration
-public class SpringSecurity {
+public class SpringSecurity  {
+
+    @Autowired
+    private JwtAuthFilters jwtAuthFilters;
 
     @Bean
     public UserDetailsService userDetailsService(){
@@ -40,24 +47,30 @@ public class SpringSecurity {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/signup/*").permitAll()
                         .requestMatchers("/api/v1/auth/signin/*").permitAll()
-                        .anyRequest().authenticated()
-                );
+                        .requestMatchers("/api/v1/auth/validate").authenticated() // <-- move here
+                        .anyRequest().authenticated() // <-- always last
+                )
+                .addFilterBefore(jwtAuthFilters, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOriginPatterns(List.of("*")); // ✅ allow all origins
-        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        corsConfig.setAllowedHeaders(List.of("*"));
-        corsConfig.setAllowCredentials(true); // ✅ if you want cookies/JWT in headers
-
+        CorsConfiguration cors = new CorsConfiguration();
+        cors.setAllowedOriginPatterns(List.of(
+                "http://localhost:[*]",
+                "http://127.0.0.1:[*]"
+        ));
+        cors.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+        cors.setAllowedHeaders(List.of("*"));
+        cors.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfig);
+        source.registerCorsConfiguration("/**", cors);
         return source;
     }
+
 
 
     @Bean
