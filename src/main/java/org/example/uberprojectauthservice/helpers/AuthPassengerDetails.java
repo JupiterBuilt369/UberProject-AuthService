@@ -1,6 +1,6 @@
 package org.example.uberprojectauthservice.helpers;
 
-import org.example.uberprojectauthservice.model.Passenger;
+import org.example.uberprojectentityservice.model.Passenger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
